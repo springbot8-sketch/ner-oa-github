@@ -1,0 +1,41 @@
+name: CI Checks
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Syntax-check all JavaScript files
+        run: |
+          for f in js/*.js; do
+            echo "Checking $f"
+            node --check "$f"
+          done
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Syntax-check server.py
+        run: python3 -m py_compile server.py
+
+      - name: Check for accidentally committed secrets/env files
+        run: |
+          if find . -name "*.env" -not -path "./.git/*" | grep -q .; then
+            echo "::error::Found a .env file in the repo -- remove it before merging."
+            exit 1
+          fi

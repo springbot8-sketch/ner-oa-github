@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log
+
+# Local build/output (none currently, reserved for future use)
+dist/
+build/
+
+# Environment files (never commit secrets/keys)
+.env
+.env.local

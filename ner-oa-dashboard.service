@@ -1,0 +1,14 @@
+[Unit]
+Description=NER OA Detection Dashboard - Local Web Server
+After=network.target
+
+[Service]
+# EDIT THIS PATH to wherever you placed the project folder on the Pi, e.g.:
+# /home/pi/ner-oa-pi
+WorkingDirectory=/home/pi/ner-oa-pi
+ExecStart=/usr/bin/python3 /home/pi/ner-oa-pi/server.py --no-launch
+Restart=on-failure
+User=pi
+
+[Install]
+WantedBy=multi-user.target

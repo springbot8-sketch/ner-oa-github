@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-Assisted Osteoarthritis Risk Marker System | North Eastern Region (NER)</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- html2pdf.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            teal: {
+              50: '#f0fdfa',
+              100: '#ccfbf1',
+              200: '#99f6e4',
+              600: '#0d9488',
+              700: '#0f766e',
+              800: '#115e59',
+              900: '#134e4a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased flex flex-col min-h-screen">
+
+  <!-- TOP HEADER & NAVBAR -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo & Title -->
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-700 to-emerald-600 text-white flex items-center justify-center font-black text-xl shadow-md">
+            OA
+          </div>
+          <div>
+            <h1 class="text-base sm:text-lg font-bold text-slate-900 leading-tight">AI-Assisted OA Risk Portal</h1>
+            <p class="text-[11px] text-teal-700 font-semibold uppercase tracking-wider hidden sm:block">North Eastern Region (NER) Screening Network</p>
+          </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <nav class="flex items-center space-x-1 sm:space-x-3 text-xs sm:text-sm font-medium overflow-x-auto py-2">
+          <button id="tabBtn-intake" onclick="switchAppTab('intake')" class="px-3 py-2 border-b-2 border-teal-600 text-teal-700 font-bold transition flex items-center gap-1.5 whitespace-nowrap">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+            Patient Intake
+          </button>
+          <button id="tabBtn-hardware" onclick="switchAppTab('hardware')" class="px-3 py-2 border-b-2 border-transparent text-slate-500 hover:text-slate-700 transition flex items-center gap-1.5 whitespace-nowrap">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/></svg>
+            Dual-Leg Hardware
+          </button>
+          <button id="tabBtn-mobility" onclick="switchAppTab('mobility')" class="px-3 py-2 border-b-2 border-transparent text-slate-500 hover:text-slate-700 transition flex items-center gap-1.5 whitespace-nowrap">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            6 Mobility Tests
+          </button>
+          <button id="tabBtn-report" onclick="switchAppTab('report')" class="px-3 py-2 border-b-2 border-transparent text-slate-500 hover:text-slate-700 transition flex items-center gap-1.5 whitespace-nowrap">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Clinical Report
+          </button>
+          <button id="tabBtn-dashboard" onclick="switchAppTab('dashboard')" class="px-3 py-2 border-b-2 border-transparent text-slate-500 hover:text-slate-700 transition flex items-center gap-1.5 whitespace-nowrap">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+            Clinician Dashboard
+          </button>
+          <button id="tabBtn-esp32guide" onclick="switchAppTab('esp32guide')" class="px-3 py-2 border-b-2 border-transparent text-slate-500 hover:text-slate-700 transition flex items-center gap-1.5 whitespace-nowrap">
+            <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+            ESP32 Code Guide
+          </button>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT WRAPPER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- ==================== TAB 1: PATIENT INTAKE FORM ==================== -->
+    <section id="tabContent-intake" class="space-y-6">
+      
+      <!-- HERO BANNER -->
+      <div class="bg-gradient-to-r from-teal-900 via-teal-800 to-slate-900 rounded-3xl p-6 sm:p-10 text-white shadow-xl relative overflow-hidden">
+        <div class="relative z-10 max-w-3xl">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-teal-500/20 text-teal-300 border border-teal-500/30 mb-3">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            ICMR & MDoNER Early Detection Protocol
+          </span>
+          <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight">AI-Assisted Osteoarthritis Screening for North Eastern Region</h2>
+          <p class="mt-3 text-slate-300 text-sm sm:text-base leading-relaxed">
+            Multi-factorial risk assessment accounting for age, physical metrics, joint symptoms, dual-leg wearable sensors (4 MPUs + 4 FSRs across two per-leg ESP32 boards), and unique NER epidemiological factors such as hilly terrain mobility, manual occupational loads, and traditional squatting practices.
+          </p>
+          <div class="mt-6 flex flex-wrap items-center gap-4">
+            <button id="btnLoadSamplePatient" type="button" class="px-4 py-2.5 bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs sm:text-sm rounded-xl transition shadow-lg flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+              Load Sample High-Risk Patient (Meghalaya)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- INTAKE FORM CARD -->
+      <div class="bg-white rounded-3xl border border-slate-200 shadow-md p-6 sm:p-8">
+        
+        <!-- STEP INDICATORS -->
+        <div class="flex items-center justify-between mb-8 max-w-2xl mx-auto border-b border-slate-100 pb-6">
+          <div class="flex items-center gap-2">
+            <div id="stepIndicator-1" class="w-8 h-8 rounded-full bg-teal-700 text-white flex items-center justify-center font-bold text-xs shadow-md">1</div>
+            <span class="text-xs sm:text-sm font-semibold text-slate-700">Demographics</span>
+          </div>
+          <div class="w-10 h-0.5 bg-slate-200"></div>
+          <div class="flex items-center gap-2">
+            <div id="stepIndicator-2" class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center font-bold text-xs border border-slate-200">2</div>
+            <span class="text-xs sm:text-sm font-semibold text-slate-700">NER Factors</span>
+          </div>
+          <div class="w-10 h-0.5 bg-slate-200"></div>
+          <div class="flex items-center gap-2">
+            <div id="stepIndicator-3" class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center font-bold text-xs border border-slate-200">3</div>
+            <span class="text-xs sm:text-sm font-semibold text-slate-700">Symptoms & History</span>
+          </div>
+        </div>
+
+        <form id="patientIntakeForm" class="space-y-6">
+          
+          <!-- STEP 1: DEMOGRAPHICS -->
+          <div id="wizardStep-1" class="space-y-6">
+            <h3 class="text-lg font-bold text-slate-900 pb-2 border-b border-slate-100">Step 1: Patient Demographics & Physical Metrics</h3>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Full Patient Name *</label>
+                <input type="text" id="inputName" required placeholder="e.g. Priya Sharma" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-600 focus:bg-white transition">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Age (Years) *</label>
+                <input type="number" id="inputAge" required min="18" max="110" placeholder="e.g. 56" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-600 focus:bg-white transition">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Biological Sex *</label>
+                <select id="inputGender" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-600 focus:bg-white transition">
+                  <option value="female">Female</option>
+                  <option value="male">Male</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">NER State *</label>
+                <select id="inputState" required class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-600 focus:bg-white transition">
+                  <option value="Assam">Assam</option>
+                  <option value="Meghalaya">Meghalaya</option>
+                  <option value="Manipur">Manipur</option>
+                  <option value="Mizoram">Mizoram</option>
+                  <option value="Nagaland">Nagaland</option>
+                  <option value="Tripura">Tripura</option>
+                  <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                  <option value="Sikkim">Sikkim</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">District / Town</label>
+                <input type="text" id="inputDistrict" placeholder="e.g. East Khasi Hills" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-600 focus:bg-white transition">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Height (cm) *</label>
+                <input type="number" id="inputHeight" required min="100" max="220" placeholder="158" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-600 focus:bg-white transition">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Weight (kg) *</label>
+                <input type="number" id="inputWeight" required min="30" max="200" placeholder="74" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-600 focus:bg-white transition">
+              </div>
+
+              <div class="sm:col-span-2 bg-teal-50/70 border border-teal-200 rounded-2xl p-4 flex items-center justify-between">
+                <div>
+                  <span class="text-xs font-bold uppercase tracking-wider text-teal-800 block">Calculated Body Mass Index (BMI)</span>
+                  <span class="text-xs text-teal-600">Cut-off optimized for Asian/NER population</span>
+                </div>
+                <div id="liveBMIDisplay" class="text-lg font-black text-teal-900">--</div>
+              </div>
+            </div>
+
+            <div class="flex justify-end pt-4">
+              <button type="button" onclick="goToWizardStep(2)" class="px-6 py-2.5 bg-teal-700 hover:bg-teal-800 text-white font-bold text-sm rounded-xl transition shadow">
+                Next: NER Regional Factors &rarr;
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 2: NER REGIONAL FACTORS -->
+          <div id="wizardStep-2" class="space-y-6 hidden">
+            <h3 class="text-lg font-bold text-slate-900 pb-2 border-b border-slate-100">Step 2: North Eastern Region Occupational & Environmental Stressors</h3>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Hilly Terrain Slope Traversal (Hours/Day)</label>
+                <input type="number" id="inputHillyHours" min="0" max="16" step="0.5" placeholder="e.g. 4" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-600 focus:bg-white transition">
+                <p class="text-[11px] text-slate-500 mt-1">Walking up and down steep mountain paths increases knee joint shear force.</p>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Squatting & Traditional Sitting Habits</label>
+                <select id="inputSquatting" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-600 focus:bg-white transition">
+                  <option value="frequent">Frequent (> 2 hours daily / Indian Toilet / Agricultural)</option>
+                  <option value="moderate">Moderate (Occasional floor sitting / squatting)</option>
+                  <option value="rare">Rare (Western seating / Chair dominant)</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Occupational Load Carrying (Hours/Day)</label>
+                <input type="number" id="inputLoadHours" min="0" max="16" step="0.5" placeholder="e.g. 2.5" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-600 focus:bg-white transition">
+                <p class="text-[11px] text-slate-500 mt-1">Carrying tea baskets, firewood, agricultural produce, or water vessels.</p>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Target Joint Location</label>
+                <select id="inputTargetJoint" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-600 focus:bg-white transition">
+                  <option value="Knee">Knee Joint (Most common in NER)</option>
+                  <option value="Hip">Hip Joint</option>
+                  <option value="Ankle">Ankle / Foot Joint</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="flex justify-between pt-4">
+              <button type="button" onclick="goToWizardStep(1)" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm rounded-xl transition">
+                &larr; Back
+              </button>
+              <button type="button" onclick="goToWizardStep(3)" class="px-6 py-2.5 bg-teal-700 hover:bg-teal-800 text-white font-bold text-sm rounded-xl transition shadow">
+                Next: Clinical Symptoms &rarr;
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 3: SYMPTOMS & HISTORY -->
+          <div id="wizardStep-3" class="space-y-6 hidden">
+            <h3 class="text-lg font-bold text-slate-900 pb-2 border-b border-slate-100">Step 3: Clinical Joint Symptoms & Medical History</h3>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div class="sm:col-span-2">
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Joint Pain Intensity Scale (0 = None, 10 = Severe Unbearable)</label>
+                <div class="flex items-center gap-4">
+                  <input type="range" id="inputPainScale" min="0" max="10" value="5" class="flex-1 accent-teal-600">
+                  <span id="painScaleValueDisplay" class="font-extrabold text-teal-800 text-base shrink-0 w-16">5 / 10</span>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Morning Joint Stiffness Duration</label>
+                <select id="inputStiffness" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-600 focus:bg-white transition">
+                  <option value="over30">> 30 minutes (Classic OA marker)</option>
+                  <option value="under30">< 30 minutes</option>
+                  <option value="none">No morning stiffness</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Audible/Palpable Joint Crepitus (Grinding)</label>
+                <select id="inputCrepitus" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-600 focus:bg-white transition">
+                  <option value="yes">Yes (Grinding sound/feeling during movement)</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Recurrent Joint Swelling / Effusion</label>
+                <select id="inputSwelling" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-600 focus:bg-white transition">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Past Joint Injury or Fracture History</label>
+                <select id="inputInjury" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-600 focus:bg-white transition">
+                  <option value="yes">Yes (Post-traumatic OA factor)</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+
+              <div class="sm:col-span-2">
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Family History of Osteoarthritis</label>
+                <select id="inputFamilyHistory" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-600 focus:bg-white transition">
+                  <option value="yes">Yes (Genetic predisposition present)</option>
+                  <option value="no">No / Unknown</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="flex justify-between pt-6 border-t border-slate-100">
+              <button type="button" onclick="goToWizardStep(2)" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm rounded-xl transition">
+                &larr; Back
+              </button>
+              <button type="submit" class="px-8 py-3 bg-gradient-to-r from-teal-700 to-emerald-600 hover:from-teal-800 hover:to-emerald-700 text-white font-extrabold text-sm rounded-xl transition shadow-lg flex items-center gap-2">
+                <span>Save Intake & Proceed to Dual-Leg Wearable Tests</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+              </button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </section>
+
+
+    <!-- ==================== TAB 2: DUAL-LEG ESP32 HARDWARE STREAMER ==================== -->
+    <section id="tabContent-hardware" class="space-y-6 hidden">
+      <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-md">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-200">
+          <div>
+            <span class="px-3 py-1 bg-amber-100 text-amber-900 border border-amber-300 text-xs font-bold rounded-full inline-block mb-2">
+              Hardware Sensor Wearable Hub (2 boards x 2 MPUs + 2 FSRs)
+            </span>
+            <h2 class="text-2xl font-extrabold text-slate-900">ESP32 Dual-Leg Live Biomechanical Streamer</h2>
+            <p class="text-xs text-slate-500 mt-1">Each leg has its own ESP32 board on its own USB port. Connect Left and Right separately below, or launch the Bio-Simulator for any leg without hardware attached.</p>
+          </div>
+          
+          <div class="flex flex-wrap items-center gap-3">
+            <button id="btnConnect_left" onclick="OAHardwareStreamer.connectLeg('left')" class="px-4 py-2.5 bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs rounded-xl transition shadow flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+              Connect Left Leg USB
+            </button>
+            <button id="btnConnect_right" onclick="OAHardwareStreamer.connectLeg('right')" class="px-4 py-2.5 bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs rounded-xl transition shadow flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+              Connect Right Leg USB
+            </button>
+            <button id="btnStartBioSim" onclick="OAHardwareStreamer.setSimulationMode('gait')" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl transition shadow flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              Launch Bio-Simulator (Both Legs)
+            </button>
+          </div>
+        </div>
+
+        <!-- DUAL LEG LIVE DISPLAY GRID -->
+        <div class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-8">
+          
+          <!-- LEFT LEG PANEL -->
+          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 relative overflow-hidden">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-3 mb-4">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-teal-600"></span>
+                <h3 class="font-black text-slate-900 text-base">LEFT LEG (2 MPUs + 2 FSRs)</h3>
+              </div>
+              <span id="legStatusBadge_left" class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-slate-100 text-slate-500 border border-slate-300">SIMULATED</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+              <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm text-center">
+                <span class="text-[10px] text-slate-400 font-bold uppercase block">Knee Joint Angle</span>
+                <span id="liveLeftKneeAngle" class="text-3xl font-black text-teal-800">0°</span>
+              </div>
+              <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm text-center">
+                <span class="text-[10px] text-slate-400 font-bold uppercase block">Angular Velocity</span>
+                <span id="liveLeftAngularVelocity" class="text-2xl font-bold text-slate-800">0 deg/s</span>
+              </div>
+            </div>
+
+            <!-- Left Foot FSR Heatmap Pressure Bars -->
+            <div class="mt-6 bg-white p-5 rounded-xl border border-slate-200">
+              <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-3">Left Foot Plantar Pressure Distribution (FSR)</h4>
+              
+              <div class="space-y-3 text-xs">
+                <div>
+                  <div class="flex justify-between text-slate-600 mb-1">
+                    <span>FSR 1: Medial (1st Metatarsal)</span>
+                    <span id="liveFsrL_medial" class="font-bold">0N</span>
+                  </div>
+                  <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                    <div id="liveFsrL_medial_bar" class="bg-emerald-600 h-full w-0 transition-all duration-100"></div>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex justify-between text-slate-600 mb-1">
+                    <span>FSR 2: Lateral (5th Metatarsal)</span>
+                    <span id="liveFsrL_lateral" class="font-bold">0N</span>
+                  </div>
+                  <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                    <div id="liveFsrL_lateral_bar" class="bg-cyan-600 h-full w-0 transition-all duration-100"></div>
+                  </div>
+                </div>
+              </div>
+              <p class="mt-3 text-[11px] text-slate-400">Data source: <span id="liveLeftDataSource" class="font-semibold text-slate-600">Simulated</span></p>
+            </div>
+          </div>
+
+          <!-- RIGHT LEG PANEL -->
+          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 relative overflow-hidden">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-3 mb-4">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-emerald-600"></span>
+                <h3 class="font-black text-slate-900 text-base">RIGHT LEG (2 MPUs + 2 FSRs)</h3>
+              </div>
+              <span id="legStatusBadge_right" class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-slate-100 text-slate-500 border border-slate-300">SIMULATED</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+              <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm text-center">
+                <span class="text-[10px] text-slate-400 font-bold uppercase block">Knee Joint Angle</span>
+                <span id="liveRightKneeAngle" class="text-3xl font-black text-emerald-800">0°</span>
+              </div>
+              <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm text-center">
+                <span class="text-[10px] text-slate-400 font-bold uppercase block">Angular Velocity</span>
+                <span id="liveRightAngularVelocity" class="text-2xl font-bold text-slate-800">0 deg/s</span>
+              </div>
+            </div>
+
+            <!-- Right Foot FSR Heatmap Pressure Bars -->
+            <div class="mt-6 bg-white p-5 rounded-xl border border-slate-200">
+              <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-3">Right Foot Plantar Pressure Distribution (FSR)</h4>
+              
+              <div class="space-y-3 text-xs">
+                <div>
+                  <div class="flex justify-between text-slate-600 mb-1">
+                    <span>FSR 1: Medial (1st Metatarsal)</span>
+                    <span id="liveFsrR_medial" class="font-bold">0N</span>
+                  </div>
+                  <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                    <div id="liveFsrR_medial_bar" class="bg-teal-600 h-full w-0 transition-all duration-100"></div>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex justify-between text-slate-600 mb-1">
+                    <span>FSR 2: Lateral (5th Metatarsal)</span>
+                    <span id="liveFsrR_lateral" class="font-bold">0N</span>
+                  </div>
+                  <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                    <div id="liveFsrR_lateral_bar" class="bg-cyan-600 h-full w-0 transition-all duration-100"></div>
+                  </div>
+                </div>
+              </div>
+              <p class="mt-3 text-[11px] text-slate-400">Data source: <span id="liveRightDataSource" class="font-semibold text-slate-600">Simulated</span></p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- REAL-TIME ASYMMETRY BANNER -->
+        <div class="mt-6 bg-teal-50 border border-teal-200 rounded-2xl p-5 flex items-center justify-between">
+          <div>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-teal-800">Live Bilateral Load Asymmetry Index</h4>
+            <p class="text-xs text-slate-600 mt-0.5">Measures real-time stance phase imbalance between Left & Right leg FSR sensors.</p>
+          </div>
+          <div id="liveGaitAsymmetry" class="text-2xl font-black text-teal-900">0.0%</div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ==================== TAB 3: 6 FUNCTIONAL MOBILITY TESTS SUITE ==================== -->
+    <section id="tabContent-mobility" class="space-y-6 hidden">
+      <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-md">
+        <div class="pb-6 border-b border-slate-200">
+          <span class="px-3 py-1 bg-teal-100 text-teal-900 border border-teal-300 text-xs font-bold rounded-full inline-block mb-2">
+            Clinical Mobility Testing Protocol
+          </span>
+          <h2 class="text-2xl font-extrabold text-slate-900">6 Functional Osteoarthritis Mobility Tests</h2>
+          <p class="text-xs text-slate-500 mt-1">Select a test from the protocol suite to run live wearable sensor analysis during physical movements.</p>
+        </div>
+
+        <!-- 6 TEST SELECTOR CARDS GRID -->
+        <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          
+          <div onclick="OAMobilityTests.selectTest('sit_to_stand')" class="p-4 bg-slate-50 hover:bg-teal-50/60 border border-slate-200 hover:border-teal-400 rounded-2xl cursor-pointer transition">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-teal-700 uppercase">Test 1</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-700">30 Seconds</span>
+            </div>
+            <h3 class="text-base font-bold text-slate-900">30s Sit-to-Stand Test</h3>
+            <p class="text-xs text-slate-500 mt-1">Measures quadriceps power, knee extension speed, and heel loading.</p>
+            <div id="testCardResult-sit_to_stand"></div>
+          </div>
+
+          <div onclick="OAMobilityTests.selectTest('squats')" class="p-4 bg-slate-50 hover:bg-teal-50/60 border border-slate-200 hover:border-teal-400 rounded-2xl cursor-pointer transition">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-teal-700 uppercase">Test 2</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-700">20 Seconds</span>
+            </div>
+            <h3 class="text-base font-bold text-slate-900">Deep Squat Mobility</h3>
+            <p class="text-xs text-slate-500 mt-1">Evaluates patellofemoral strain and bilateral weight distribution.</p>
+            <div id="testCardResult-squats"></div>
+          </div>
+
+          <div onclick="OAMobilityTests.selectTest('gait')" class="p-4 bg-slate-50 hover:bg-teal-50/60 border border-slate-200 hover:border-teal-400 rounded-2xl cursor-pointer transition">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-teal-700 uppercase">Test 3</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-700">20 Seconds</span>
+            </div>
+            <h3 class="text-base font-bold text-slate-900">Timed Gait & Walk (TUG)</h3>
+            <p class="text-xs text-slate-500 mt-1">Measures stance ratio, stride velocity, and step asymmetry index.</p>
+            <div id="testCardResult-gait"></div>
+          </div>
+
+          <div onclick="OAMobilityTests.selectTest('balance')" class="p-4 bg-slate-50 hover:bg-teal-50/60 border border-slate-200 hover:border-teal-400 rounded-2xl cursor-pointer transition">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-teal-700 uppercase">Test 4</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-700">15 Seconds</span>
+            </div>
+            <h3 class="text-base font-bold text-slate-900">Single Leg Stance Balance</h3>
+            <p class="text-xs text-slate-500 mt-1">Assesses Center of Pressure (COP) sway and postural joint stability.</p>
+            <div id="testCardResult-balance"></div>
+          </div>
+
+          <div onclick="OAMobilityTests.selectTest('stairs')" class="p-4 bg-slate-50 hover:bg-teal-50/60 border border-slate-200 hover:border-teal-400 rounded-2xl cursor-pointer transition">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-teal-700 uppercase">Test 5</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-700">20 Seconds</span>
+            </div>
+            <h3 class="text-base font-bold text-slate-900">Stair Stepping Test</h3>
+            <p class="text-xs text-slate-500 mt-1">Tracks peak heel impact force during slope & stair ascent/descent.</p>
+            <div id="testCardResult-stairs"></div>
+          </div>
+
+          <div onclick="OAMobilityTests.selectTest('rom')" class="p-4 bg-slate-50 hover:bg-teal-50/60 border border-slate-200 hover:border-teal-400 rounded-2xl cursor-pointer transition">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-teal-700 uppercase">Test 6</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-700">15 Seconds</span>
+            </div>
+            <h3 class="text-base font-bold text-slate-900">Knee Range of Motion (ROM)</h3>
+            <p class="text-xs text-slate-500 mt-1">Measures maximum extension/flexion range and motion jerk index.</p>
+            <div id="testCardResult-rom"></div>
+          </div>
+
+        </div>
+
+        <!-- ACTIVE TEST CONTROLLER PANEL -->
+        <div class="mt-8 bg-gradient-to-r from-slate-900 to-teal-950 rounded-2xl p-6 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+          <div>
+            <span id="activeTestCategory" class="text-xs font-bold uppercase tracking-wider text-teal-400 block">Quadriceps Power & Extension</span>
+            <h3 id="activeTestTitle" class="text-xl font-extrabold mt-1">30-Second Sit-to-Stand Test</h3>
+            <p id="activeTestInstructions" class="text-xs text-slate-300 mt-2 max-w-xl">
+              Patient sits on a standard chair with arms crossed. Upon starting, perform full stands and sits repeatedly for 30 seconds while wearable sensors record knee joint acceleration and pressure.
+            </p>
+          </div>
+
+          <div class="flex items-center gap-6 shrink-0">
+            <div class="text-center">
+              <span class="text-[10px] text-slate-400 uppercase font-bold block">Remaining Time</span>
+              <span id="activeTestTimerDisplay" class="text-4xl font-black text-emerald-400 font-mono">30s</span>
+            </div>
+
+            <div>
+              <button id="btnStartTestRun" onclick="OAMobilityTests.startTestRun()" class="px-6 py-3 bg-teal-500 hover:bg-teal-400 text-slate-950 font-black text-sm rounded-xl transition shadow-lg flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Start Test Recording
+              </button>
+              <button id="btnStopTestRun" onclick="OAMobilityTests.finishTestRun()" class="px-6 py-3 bg-rose-600 hover:bg-rose-500 text-white font-black text-sm rounded-xl transition shadow-lg hidden">
+                Finish Test
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ==================== TAB 4: CLINICAL PATIENT REPORT ==================== -->
+    <section id="tabContent-report" class="space-y-6 hidden">
+      <div class="flex justify-end gap-3 no-print">
+        <button onclick="window.regenerateReport()" class="px-4 py-2 bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold rounded-xl shadow transition flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          Refresh Report (Latest Sensor Data)
+        </button>
+        <button onclick="OAReportGenerator.exportPDF()" class="px-4 py-2 bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold rounded-xl shadow transition flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Export / Download PDF Report
+        </button>
+      </div>
+
+      <div id="clinicalReportContainer">
+        <!-- Rendered dynamically by OAReportGenerator -->
+        <div class="text-center py-12 text-slate-400 text-sm">
+          Please complete patient intake form to generate the official clinical screening report.
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ==================== TAB 5: CLINICIAN DASHBOARD & REGISTRY ==================== -->
+    <section id="tabContent-dashboard" class="space-y-6 hidden">
+      <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-md">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200">
+          <div>
+            <h2 class="text-2xl font-extrabold text-slate-900">Clinician Patient Screening Registry</h2>
+            <p class="text-xs text-slate-500 mt-1">Registry of screened patients across North Eastern Region states.</p>
+          </div>
+          <button onclick="OADashboard.exportCSV()" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold rounded-xl transition shadow flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            Export Registry to CSV
+          </button>
+        </div>
+
+        <!-- STATS CARDS -->
+        <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-center">
+            <span class="text-[10px] text-slate-400 font-bold uppercase block">Total Screened Patients</span>
+            <span id="statTotalPatients" class="text-3xl font-black text-slate-900">0</span>
+          </div>
+          <div class="bg-rose-50 p-4 rounded-2xl border border-rose-200 text-center">
+            <span class="text-[10px] text-rose-700 font-bold uppercase block">High OA Risk Flagged</span>
+            <span id="statHighRiskCount" class="text-3xl font-black text-rose-800">0</span>
+          </div>
+          <div class="bg-teal-50 p-4 rounded-2xl border border-teal-200 text-center">
+            <span class="text-[10px] text-teal-700 font-bold uppercase block">Average Composite Risk Score</span>
+            <span id="statAvgScore" class="text-3xl font-black text-teal-800">0%</span>
+          </div>
+        </div>
+
+        <!-- PATIENT TABLE -->
+        <div class="mt-6 overflow-x-auto rounded-2xl border border-slate-200">
+          <table class="min-w-full text-left bg-white">
+            <thead class="bg-slate-50 border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase">
+              <tr>
+                <th class="py-3 px-4">Report ID</th>
+                <th class="py-3 px-4">Patient Name</th>
+                <th class="py-3 px-4">Age / Gender</th>
+                <th class="py-3 px-4">NER State</th>
+                <th class="py-3 px-4">Diagnosed OA Subtype</th>
+                <th class="py-3 px-4">Risk Category</th>
+                <th class="py-3 px-4 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="dashboardTableBody">
+              <!-- Rendered by OADashboard -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ==================== TAB 6: ESP32 CODE GUIDE ==================== -->
+    <section id="tabContent-esp32guide" class="space-y-6 hidden">
+      <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-md">
+        <div class="pb-6 border-b border-slate-200">
+          <span class="px-3 py-1 bg-amber-100 text-amber-900 border border-amber-300 text-xs font-bold rounded-full inline-block mb-2">
+            Hardware Assembly Guide
+          </span>
+          <h2 class="text-2xl font-extrabold text-slate-900">ESP32 Two-Board Hardware Wiring & Pinout Guide</h2>
+          <p class="text-xs text-slate-500 mt-1">This system uses TWO separate ESP32 boards (one strapped to each leg), each plugged into its own USB port. No I2C multiplexer is needed since each board only handles 2 IMUs.</p>
+        </div>
+
+        <div class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6 text-xs">
+          
+          <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3">
+            <h3 class="font-bold text-slate-900 text-sm">Left Leg Board (LEG_SIDE = "left")</h3>
+            <ul class="space-y-1.5 text-slate-700">
+              <li>• <strong>Thigh MPU6050 IMU:</strong> I2C address 0x68 (AD0 → GND), SDA=21, SCL=22</li>
+              <li>• <strong>Shank MPU6050 IMU:</strong> I2C address 0x69 (AD0 → 3.3V), same bus</li>
+              <li>• <strong>FSR 1 (1st Metatarsal / Medial):</strong> Pin GPIO34 (ADC1_CH6)</li>
+              <li>• <strong>FSR 2 (5th Metatarsal / Lateral):</strong> Pin GPIO35 (ADC1_CH7)</li>
+              <li>• Each FSR: one leg to 3.3V, other leg to the ADC pin + a 10kΩ pull-down to GND.</li>
+            </ul>
+          </div>
+
+          <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3">
+            <h3 class="font-bold text-slate-900 text-sm">Right Leg Board (LEG_SIDE = "right")</h3>
+            <ul class="space-y-1.5 text-slate-700">
+              <li>• <strong>Thigh MPU6050 IMU:</strong> I2C address 0x68 (AD0 → GND), SDA=21, SCL=22</li>
+              <li>• <strong>Shank MPU6050 IMU:</strong> I2C address 0x69 (AD0 → 3.3V), same bus</li>
+              <li>• <strong>FSR 1 (1st Metatarsal / Medial):</strong> Pin GPIO34 (ADC1_CH6)</li>
+              <li>• <strong>FSR 2 (5th Metatarsal / Lateral):</strong> Pin GPIO35 (ADC1_CH7)</li>
+              <li>• Wiring is identical to the left board — only the LEG_SIDE constant in the firmware differs.</li>
+            </ul>
+          </div>
+
+        </div>
+
+        <div class="mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5 text-xs text-slate-700">
+          <h3 class="font-bold text-slate-900 text-sm mb-2">Flashing & Connecting</h3>
+          <ol class="space-y-1.5 list-decimal list-inside">
+            <li>Flash <code class="bg-slate-200 px-1 rounded">esp32_single_leg_hardware.ino</code> to the LEFT board with <code class="bg-slate-200 px-1 rounded">LEG_SIDE = "left"</code>.</li>
+            <li>Flash the same file to the RIGHT board with <code class="bg-slate-200 px-1 rounded">LEG_SIDE = "right"</code>.</li>
+            <li>Plug both boards into USB ports on the same computer/Raspberry Pi.</li>
+            <li>On the Hardware tab, click <strong>"Connect Left Leg USB"</strong> and pick the left board's port, then click <strong>"Connect Right Leg USB"</strong> and pick the right board's port.</li>
+          </ol>
+        </div>
+
+        <div class="mt-6 bg-slate-900 text-teal-300 p-5 rounded-2xl font-mono text-xs overflow-x-auto">
+          <p class="text-slate-400 font-sans font-bold text-sm mb-2">Arduino C++ Code Location:</p>
+          <code>esp32_firmware/esp32_single_leg_hardware.ino</code>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500 mt-auto">
+    <p>© 2026 AI-Assisted Early Detection System for Osteoarthritis Risk Markers in North Eastern Region (NER)</p>
+  </footer>
+
+  <!-- MODULE SCRIPTS -->
+  <script src="js/ml-inference-engine.js"></script>
+  <script src="js/ai-engine.js"></script>
+  <script src="js/hardware-streamer.js"></script>
+  <script src="js/mobility-tests.js"></script>
+  <script src="js/report-generator.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
